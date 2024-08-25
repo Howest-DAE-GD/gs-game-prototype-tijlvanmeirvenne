@@ -2,6 +2,7 @@
 #include "BaseGame.h"
 #include "vector"
 
+class Button;
 class Texture;
 class bottle;
 class Game : public BaseGame
@@ -25,6 +26,11 @@ public:
 	void ProcessMouseDownEvent( const SDL_MouseButtonEvent& e ) override;
 	void ProcessMouseUpEvent( const SDL_MouseButtonEvent& e ) override;
 
+	enum class gameState
+	{
+		title, normal, challenge, normalEnd, challengeEnd
+	};
+
 private:
 
 	// FUNCTIONS
@@ -37,7 +43,12 @@ private:
 	Point2f m_ClickedBottles;
 	std::vector<bottle*> m_bottles;
 	int m_Score;
-	bool m_ok;
+	gameState m_ok;
 	Texture* m_Explosion;
 	Texture* m_ScoreText;
+	Texture* m_GoalText;
+	Button* m_StartButton;
+	Button* m_ChallengeButton;
+	int m_RandomNumber;
+	float m_Timer;
 };

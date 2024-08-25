@@ -27,7 +27,8 @@ public:
 private:
 	Texture* m_Texture;
 	Rectf m_MyBounds{};
-	int m_Decay;
+	float m_Decay;
 	State m_MyState{ State::Normal };
+	float m_DecayRate;
 };
 
