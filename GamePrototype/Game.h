@@ -1,5 +1,9 @@
 #pragma once
 #include "BaseGame.h"
+#include "vector"
+
+class Texture;
+class bottle;
 class Game : public BaseGame
 {
 public:
@@ -27,4 +31,13 @@ private:
 	void Initialize();
 	void Cleanup( );
 	void ClearBackground( ) const;
+	void FuseBottles();
+	void IsUnstable();
+
+	Point2f m_ClickedBottles;
+	std::vector<bottle*> m_bottles;
+	int m_Score;
+	bool m_ok;
+	Texture* m_Explosion;
+	Texture* m_ScoreText;
 };
