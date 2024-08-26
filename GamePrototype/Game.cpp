@@ -20,10 +20,10 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
-	m_bottles.push_back(new bottle("pngegg.png", Point2f{0,0}));
-	m_bottles.push_back(new bottle("pngegg.png", Point2f{ 1000/4,0 }));
-	m_bottles.push_back(new bottle("pngegg.png", Point2f{ (1000 / 4)*2,0 }));
-	m_bottles.push_back(new bottle("pngegg.png", Point2f{ (1000 / 4)*3,0 }));
+	m_bottles.push_back(new bottle("pngegg.png","flamecartoon.png", Point2f{0,0}));
+	m_bottles.push_back(new bottle("pngegg.png", "flamecartoon.png", Point2f{ 1000/4,0 }));
+	m_bottles.push_back(new bottle("pngegg.png", "flamecartoon.png", Point2f{ (1000 / 4)*2,0 }));
+	m_bottles.push_back(new bottle("pngegg.png", "flamecartoon.png", Point2f{ (1000 / 4)*3,0 }));
 
 	m_ClickedBottles = Point2f{ 4,4 };
 	m_Score = 0;
@@ -39,6 +39,7 @@ void Game::Initialize( )
 	m_StartButton = new Button("StartButton.png", Point2f{ 400, 460 });
 	m_ChallengeButton = new Button("ChallengeButton.png", Point2f{ 400, 390 });
 	m_BackButton = new Button("back-button.png", Point2f{ 10, 730 });
+	m_InfoButton = new Button("information-button.png", Point2f{ 10, 660 });
 
 	m_Timer = 31.f;
 }
@@ -140,6 +141,8 @@ void Game::Draw( ) const
 
 	if (m_ok == gameState::normal || m_ok == gameState::challenge)
 	{
+		m_InfoButton->draw();
+
 		std::string timertext = std::to_string(int(m_Timer));
 		Texture temptimer = Texture(timertext, "Arial.ttf", 70, Color4f{ 0.f,0.f,0.f,1.f });
 		temptimer.Draw(Point2f{ 100.f, 700.f });
@@ -190,6 +193,42 @@ void Game::Draw( ) const
 	if (m_ok != gameState::title)
 	{
 		m_BackButton->draw();
+	}
+	if (m_ok == gameState::infoNormal)
+	{
+		Texture line1 = Texture("Bottles decay over time", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line2 = Texture("Eventually they will explode", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line3 = Texture("Merge bottles to prevent this from happening", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line4 = Texture("To merge bottles just click the two you want to merge", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line5 = Texture("The closer to exploding, the higher score you will get", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line6 = Texture("When the timer runs out the game is over", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+
+		line1.Draw(Point2f{ 50,600});
+		line2.Draw(Point2f{ 50,550 });
+		line3.Draw(Point2f{ 50,450 });
+		line4.Draw(Point2f{ 50,400 });
+		line5.Draw(Point2f{ 50,300 });
+		line6.Draw(Point2f{ 50,250 });
+	}
+	if (m_ok == gameState::infoChallenge)
+	{
+		Texture line1 = Texture("Bottles decay over time", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line2 = Texture("Eventually they will explode", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line3 = Texture("Merge bottles to prevent this from happening", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line4 = Texture("To merge bottles just click the two you want to merge", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line5 = Texture("The closer to exploding, the higher score you will get", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line6 = Texture("Try to get as close to a given score as possible", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line7 = Texture("When the timer runs out or your score is to high", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+		Texture line8 = Texture("the game is over", "Arial.ttf", 40, Color4f{ 0.f,0.f,0.f,1.f });
+
+		line1.Draw(Point2f{ 50,600 });
+		line2.Draw(Point2f{ 50,550 });
+		line3.Draw(Point2f{ 50,450 });
+		line4.Draw(Point2f{ 50,400 });
+		line5.Draw(Point2f{ 50,300 });
+		line6.Draw(Point2f{ 50,250 });
+		line7.Draw(Point2f{ 50,150 });
+		line8.Draw(Point2f{ 50,120 });
 	}
 }
 
@@ -262,17 +301,29 @@ void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
 	{
 		if (m_BackButton->OnMouseUpEvent(e))
 		{
-			for (bottle* bottle : m_bottles)
+			if (m_ok == gameState::infoNormal)
 			{
-				bottle->ResetBottle();
+				m_ok = gameState::normal;
 			}
-			m_Score = 0;
-			m_Timer = 31;
-			m_RandomNumber = rand() % 7778;
-			delete m_GoalText;
-			std::string goaltext = "Target Score   " + std::to_string(m_RandomNumber);
-			m_GoalText = new Texture(goaltext, "Arial.ttf", 50, Color4f{ 0.f,0.f,0.f,1.f });
-			m_ok = gameState::title;
+			else if (m_ok == gameState::infoChallenge)
+			{
+				m_ok = gameState::challenge;
+			}
+			else 
+			{
+				for (bottle* bottle : m_bottles)
+				{
+					bottle->ResetBottle();
+				}
+				m_Score = 0;
+				m_Timer = 31;
+				m_RandomNumber = rand() % 7778;
+				m_ClickedBottles = Point2f{ 4,4 };
+				delete m_GoalText;
+				std::string goaltext = "Target Score   " + std::to_string(m_RandomNumber);
+				m_GoalText = new Texture(goaltext, "Arial.ttf", 50, Color4f{ 0.f,0.f,0.f,1.f });
+				m_ok = gameState::title;
+			}
 		}
 	}
 	if (m_ok == gameState::normal || m_ok == gameState::challenge)
@@ -281,7 +332,15 @@ void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
 		{
 			bottle->OnMouseUpEvent(e);
 		}
-		
+		if (m_ok == gameState::normal && m_InfoButton->OnMouseUpEvent(e))
+		{
+			m_ok = gameState::infoNormal;
+		}
+		if (m_ok == gameState::challenge && m_InfoButton->OnMouseUpEvent(e))
+		{
+			m_ok = gameState::infoChallenge;
+		}
+
 	}
 	else if (m_ok == gameState::title)
 	{

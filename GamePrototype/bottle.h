@@ -5,7 +5,7 @@
 class bottle
 {
 public:
-	bottle(const std::string& texturePath, Point2f position);
+	bottle(const std::string& texturePath, const std::string& flamePath, Point2f position);
 	~bottle();
 
 	void update();
@@ -26,6 +26,7 @@ public:
 
 private:
 	Texture* m_Texture;
+	Texture* m_FlameTexture;
 	Rectf m_MyBounds{};
 	float m_Decay;
 	State m_MyState{ State::Normal };

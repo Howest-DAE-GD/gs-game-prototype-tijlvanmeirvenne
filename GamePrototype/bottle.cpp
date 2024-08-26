@@ -5,9 +5,10 @@
 #include "Texture.h"
 #include <iostream>
 
-bottle::bottle(const std::string& texturePath, Point2f position)
-{
+bottle::bottle(const std::string& texturePath, const std::string& flamePath, Point2f position)
+{ 
 	m_Texture = new Texture(texturePath);
+	m_FlameTexture = new Texture(flamePath);
 	m_MyBounds = Rectf{ position.x, position.y, m_Texture->GetWidth(), m_Texture->GetHeight()};
 	m_Decay = 0;
 	m_DecayRate = ((rand() % 7) + 6) / 10.f;
@@ -24,6 +25,12 @@ void bottle::update()
 
 void bottle::draw()
 {
+	if (m_Decay >= 800)
+	{
+		m_FlameTexture->Draw(Point2f{ m_MyBounds.left, m_MyBounds.bottom });
+	}
+
+
 	if (m_MyState == State::Clicked)
 	{
 		utils::SetColor(Color4f{ 0.f,0.f,1.f,1.f });

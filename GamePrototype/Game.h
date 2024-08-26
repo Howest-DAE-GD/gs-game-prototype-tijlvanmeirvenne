@@ -28,7 +28,7 @@ public:
 
 	enum class gameState
 	{
-		title, normal, challenge, normalEnd, challengeEnd
+		title, normal, challenge, normalEnd, challengeEnd, infoNormal, infoChallenge
 	};
 
 private:
@@ -51,6 +51,7 @@ private:
 	Button* m_StartButton;
 	Button* m_ChallengeButton;
 	Button* m_BackButton;
+	Button* m_InfoButton; 
 
 	int m_HighScore;
 	int m_HighScoreChallenge;
