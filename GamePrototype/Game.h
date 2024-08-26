@@ -47,8 +47,13 @@ private:
 	Texture* m_Explosion;
 	Texture* m_ScoreText;
 	Texture* m_GoalText;
+
 	Button* m_StartButton;
 	Button* m_ChallengeButton;
+	Button* m_BackButton;
+
+	int m_HighScore;
+	int m_HighScoreChallenge;
 	int m_RandomNumber;
 	float m_Timer;
 };
